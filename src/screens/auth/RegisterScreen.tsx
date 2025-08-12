@@ -1,15 +1,20 @@
+import * as SecureStore from "expo-secure-store";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import Spacer from "../../components/utils/Spacer";
-import { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AuthStackParamList } from "../../navigators/AuthStack";
+import SecureStoreConstants from "../../constants/SecureStoreConstants";
+import useAppDispatch from "../../hooks/useAppDispatch";
+import useAppNavigation from "../../hooks/useAppNavigation";
+import ErrorResponse from "../../models/global/response/ErrorResponse";
 import AuthService from "../../services/AuthService";
-import ErrorResponse from "../../models/response/ErrorResponse";
+import { login } from "../../store/slices/authReducer";
+import useOnlyUnauthenticated from "../../hooks/useOnlyUnauthenticated";
 
 function RegisterScreen() {
-    const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+    useOnlyUnauthenticated()
+
+    const navigation = useAppNavigation();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -18,6 +23,7 @@ function RegisterScreen() {
     const [isEmailInputDisabled, setIsEmailInputDisabled] = useState(false);
     const [isUsernameInputDisabled, setIsUsernameInputDisabled] = useState(false);
     const [isPasswordInputDisabled, setIsPasswordInputDisabled] = useState(false);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const isValidUsername = username.length >= 3;
@@ -26,8 +32,8 @@ function RegisterScreen() {
         setSubmitIsDisabled(!(isValidUsername && isValidPassword && isValidEmail));
     }, [username, password, email]);
 
-    const backToLoginScreenHandler = function () {
-        navigation.goBack();
+    const navigateToLoginScreenHandler = function () {
+        navigation.replace("Login");
     };
 
     const registerHandler = async function () {
@@ -38,13 +44,30 @@ function RegisterScreen() {
             setIsUsernameInputDisabled(true);
             setIsPasswordInputDisabled(true);
 
-            const response = await AuthService.register({
+            await AuthService.register({
                 email,
                 password,
                 username,
             });
-            console.log(response);
+
+            const {
+                data: { accessToken, refreshToken },
+            } = await AuthService.login({
+                username,
+                password,
+            });
+
+            await SecureStore.setItemAsync(SecureStoreConstants.ACCESS_TOKEN, accessToken);
+            await SecureStore.setItemAsync(SecureStoreConstants.REFRESH_TOKEN, refreshToken);
+
+            dispatch(
+                login({
+                    accessToken,
+                    refreshToken,
+                })
+            );
         } catch (err) {
+            // TODO: handle error
             if (err instanceof ErrorResponse) {
                 console.error(err.message);
             } else {
@@ -94,7 +117,7 @@ function RegisterScreen() {
 
             <Text>
                 Already have an account?{" "}
-                <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={backToLoginScreenHandler}>
+                <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={navigateToLoginScreenHandler}>
                     Login
                 </Text>
             </Text>

@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import Spacer from "../../components/utils/Spacer";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AuthStackParamList } from "../../navigators/AuthStack";
+import useAppNavigation from "../../hooks/useAppNavigation";
+import useOnlyUnauthenticated from "../../hooks/useOnlyUnauthenticated";
 
 function LoginScreen() {
+    useOnlyUnauthenticated()
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [submitIsDisabled, setSubmitIsDisabled] = useState(true);
-    const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+    const navigation = useAppNavigation();
 
     useEffect(() => {
         const isValidUsername = username.length >= 3;
@@ -19,7 +20,7 @@ function LoginScreen() {
     }, [username, password]);
 
     const navigateToRegisterScreenHandler = function () {
-        navigation.navigate("Register");
+        navigation.replace("Register");
     };
 
     return (
