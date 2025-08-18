@@ -1,24 +1,25 @@
-import { View } from "react-native";
-import { Button, Text } from "react-native-paper";
-import useAppDispatch from "../../hooks/useAppDispatch";
-import { logout } from "../../store/slices/authReducer";
+import { StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import WalletContainer from "../../components/wallets/WalletContainer";
 import useProtectedScreen from "../../hooks/useProtectedScreen";
 
 function HomeScreen() {
     useProtectedScreen();
 
-    const dispatch = useAppDispatch();
-
-    const logoutHandler = function() {
-        dispatch(logout());
-    }
-
     return (
-        <View>
-            <Text>Hello from HomeScreen</Text>
-            <Button onPress={logoutHandler}>Logout</Button>
+        <View style={styles.container}>
+            <WalletContainer />
+            <View>
+                <Text>Recent Transactions</Text>
+            </View>
         </View>
-    )
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        alignItems: "center"
+    }
+});
 
 export default HomeScreen;

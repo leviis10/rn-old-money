@@ -1,13 +1,27 @@
-export interface ErrorCode {
-    NotFound: "NotFound";
-    Hash: "Hash";
-    EnvironmentVariable: "EnvironmentVariable";
-    Parse: "Parse";
-    Database: "Database";
-    Validation: "Validation";
-    Authentication: "Authentication";
-    Authorization: "Authorization";
-    InvalidFormatter: "InvalidFormatter";
+// export interface ErrorCode {
+//     NotFound: "NotFound";
+//     Hash: "Hash";
+//     EnvironmentVariable: "EnvironmentVariable";
+//     Parse: "Parse";
+//     Database: "Database";
+//     Validation: "Validation";
+//     Authentication: "Authentication";
+//     Authorization: "Authorization";
+//     InvalidFormatter: "InvalidFormatter";
+//     Expired: "Expired";
+// }
+
+export enum ErrorCode {
+    NotFound = "NotFound",
+    Hash = "Hash",
+    EnvironmentVariable = "EnvironmentVariable",
+    Parse = "Parse",
+    Database = "Database",
+    Validation = "Validation",
+    Authentication = "Authentication",
+    Authorization = "Authorization",
+    InvalidFormatter = "InvalidFormatter",
+    Expired = "Expired",
 }
 
 class ErrorResponse {

@@ -1,18 +1,18 @@
 import * as SecureStore from "expo-secure-store";
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import SecureStoreConstants from "./constants/SecureStoreConstants";
 import useAppDispatch from "./hooks/useAppDispatch";
 import RootStack from "./navigators/RootStack";
-import { login } from "./store/slices/authReducer";
+import { setToken } from "./store/slices/authReducer";
 
 SplashScreen.preventAutoHideAsync();
 
 SplashScreen.setOptions({
     duration: 1000,
-    fade: true
+    fade: true,
 });
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
             const refreshToken = await SecureStore.getItemAsync(SecureStoreConstants.REFRESH_TOKEN);
 
             if (accessToken !== null && refreshToken !== null) {
-                dispatch(login({ accessToken, refreshToken }));
+                dispatch(setToken({ accessToken, refreshToken }));
             }
 
             setIsAuthenticating(false);
@@ -41,8 +41,7 @@ function App() {
 
     return (
         <View style={styles.container}>
-            <StatusBar style="light" />
-            <View style={styles.statusBar} />
+            <StatusBar style="auto" />
             <RootStack />
         </View>
     );
@@ -51,9 +50,6 @@ function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    statusBar: {
-        backgroundColor: "#000",
     },
 });
 

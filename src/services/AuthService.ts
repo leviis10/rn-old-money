@@ -1,6 +1,7 @@
 import LoginPayload from "../models/auth/request/LoginPayload";
 import RegisterPayload from "../models/auth/request/RegisterPayload";
 import LoginResponse from "../models/auth/response/LoginResponse";
+import RefreshResponse from "../models/auth/response/RefreshResponse";
 import RegisterResponse from "../models/auth/response/RegisterResponse";
 import SuccessResponse from "../models/global/response/SuccessResponse";
 import handleHttpClientError from "../utils/handleHttpClientError";
@@ -24,6 +25,17 @@ class AuthService {
                 url: "/api/v1/auth/login",
                 method: "POST",
                 data: payload,
+            });
+            return data;
+        });
+    }
+
+    static async refresh(refreshToken: string): Promise<SuccessResponse<RefreshResponse>> {
+        return await handleHttpClientError(async () => {
+            const { data } = await httpClient({
+                method: "POST",
+                url: "/api/v1/auth/refresh",
+                data: { refreshToken },
             });
             return data;
         });

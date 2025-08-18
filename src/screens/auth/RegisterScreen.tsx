@@ -8,11 +8,11 @@ import useAppDispatch from "../../hooks/useAppDispatch";
 import useAppNavigation from "../../hooks/useAppNavigation";
 import ErrorResponse from "../../models/global/response/ErrorResponse";
 import AuthService from "../../services/AuthService";
-import { login } from "../../store/slices/authReducer";
+import { setToken } from "../../store/slices/authReducer";
 import useOnlyUnauthenticated from "../../hooks/useOnlyUnauthenticated";
 
 function RegisterScreen() {
-    useOnlyUnauthenticated()
+    useOnlyUnauthenticated();
 
     const navigation = useAppNavigation();
     const [email, setEmail] = useState("");
@@ -23,6 +23,7 @@ function RegisterScreen() {
     const [isEmailInputDisabled, setIsEmailInputDisabled] = useState(false);
     const [isUsernameInputDisabled, setIsUsernameInputDisabled] = useState(false);
     const [isPasswordInputDisabled, setIsPasswordInputDisabled] = useState(false);
+    const [isShownPassword, setIsShownPassword] = useState(false);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -61,7 +62,7 @@ function RegisterScreen() {
             await SecureStore.setItemAsync(SecureStoreConstants.REFRESH_TOKEN, refreshToken);
 
             dispatch(
-                login({
+                setToken({
                     accessToken,
                     refreshToken,
                 })
@@ -80,6 +81,10 @@ function RegisterScreen() {
             setIsUsernameInputDisabled(false);
             setIsPasswordInputDisabled(false);
         }
+    };
+
+    const togglePasswordHandler = function () {
+        setIsShownPassword(!isShownPassword);
     };
 
     return (
@@ -110,8 +115,9 @@ function RegisterScreen() {
                 onChangeText={(text) => setPassword(text)}
                 mode="outlined"
                 autoCapitalize="none"
-                secureTextEntry
+                secureTextEntry={!isShownPassword}
                 disabled={isPasswordInputDisabled}
+                right={<TextInput.Icon onPress={togglePasswordHandler} icon={!isShownPassword ? "eye" : "eye-off"} />}
             />
             <Spacer height={10} />
 
