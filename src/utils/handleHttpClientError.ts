@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import ErrorResponse from "../models/global/response/ErrorResponse";
 
-function handleHttpClientError<T>(fn: () => Promise<T>): Promise<T> {
+async function handleHttpClientError<T>(fn: () => Promise<T>): Promise<T> {
     try {
-        return fn();
+        return await fn();
     } catch (err) {
         if (err instanceof AxiosError) {
             const axiosError = err as AxiosError<ErrorResponse>;

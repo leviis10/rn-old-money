@@ -1,17 +1,16 @@
+import { StyleSheet, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
-import App from "./App";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native";
-import store from "./store";
 import { Provider } from "react-redux";
+import App from "./App";
+import store from "./store";
 
 export default function Main() {
     return (
         <Provider store={store}>
             <PaperProvider>
-                <SafeAreaView style={styles.container}>
+                <View style={styles.container}>
                     <App />
-                </SafeAreaView>
+                </View>
             </PaperProvider>
         </Provider>
     );

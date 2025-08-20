@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import useAppSelector from "./useAppSelector";
-import useAppNavigation from "./useAppNavigation";
+import { useNavigation } from "@react-navigation/native";
 
 function useProtectedScreen() {
     const { accessToken: authStateAccessToken } = useAppSelector(({ auth }) => auth);
-    const navigation = useAppNavigation();
+    const navigation = useNavigation();
 
     useEffect(() => {
         if (authStateAccessToken === null) {
-            navigation.replace("Login");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "Login" }],
+            });
         }
     }, [navigation, authStateAccessToken]);
 }

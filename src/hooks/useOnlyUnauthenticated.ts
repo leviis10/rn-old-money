@@ -1,14 +1,17 @@
 import { useEffect } from "react";
-import useAppNavigation from "./useAppNavigation";
 import useAppSelector from "./useAppSelector";
+import { useNavigation } from "@react-navigation/native";
 
 function useOnlyUnauthenticated() {
-    const navigation = useAppNavigation();
+    const navigation = useNavigation();
     const { accessToken: authStateAccessToken } = useAppSelector(({ auth }) => auth);
 
     useEffect(() => {
         if (authStateAccessToken !== null) {
-            navigation.replace("Home");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "Home" }],
+            });
         }
     }, [navigation, authStateAccessToken]);
 }

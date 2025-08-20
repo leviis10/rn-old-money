@@ -5,10 +5,10 @@ import { Button, Text, TextInput } from "react-native-paper";
 import Spacer from "../../components/utils/Spacer";
 import SecureStoreConstants from "../../constants/SecureStoreConstants";
 import useAppDispatch from "../../hooks/useAppDispatch";
-import useAppNavigation from "../../hooks/useAppNavigation";
 import useOnlyUnauthenticated from "../../hooks/useOnlyUnauthenticated";
 import AuthService from "../../services/AuthService";
 import { setToken } from "../../store/slices/authReducer";
+import { useNavigation } from "@react-navigation/native";
 
 function LoginScreen() {
     useOnlyUnauthenticated();
@@ -20,7 +20,7 @@ function LoginScreen() {
     const [isShownPassword, setIsShownPassword] = useState(false);
     const [submitIsDisabled, setSubmitIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const navigation = useAppNavigation();
+    const navigation = useNavigation();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -30,7 +30,10 @@ function LoginScreen() {
     }, [username, password]);
 
     const navigateToRegisterScreenHandler = function () {
-        navigation.replace("Register");
+        navigation.reset({
+            index: 0,
+            routes: [{ name: "Register" }],
+        });
     };
 
     const loginHandler = async function () {
