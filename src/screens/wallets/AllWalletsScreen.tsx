@@ -1,44 +1,31 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useCallback, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ActivityIndicator, Card, FAB, Icon, Text } from "react-native-paper";
-import GetWalletResponse from "../../models/wallets/response/GetWalletResponse";
-import WalletService from "../../services/WalletService";
+import { useCallback } from "react";
+import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, FAB, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import WalletList from "../../components/wallets/WalletList";
+import useAppDispatch from "../../hooks/useAppDispatch";
+import useAppSelector from "../../hooks/useAppSelector";
+import useProtectedScreen from "../../hooks/useProtectedScreen";
+import { findAllWallets } from "../../store/slices/walletsReducer";
 
 function AllWalletsScreen() {
-    const [wallets, setWallets] = useState<GetWalletResponse[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    useProtectedScreen();
+
+    const { isLoading, wallets } = useAppSelector((state) => state.wallets);
+    const dispatch = useAppDispatch();
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
 
     useFocusEffect(
         useCallback(() => {
-            (async () => {
-                try {
-                    setIsLoading(true);
-                    const response = await WalletService.findAll();
-                    setWallets(response.data);
-                } catch (err) {
-                    // TODO: handle error
-                    console.error(err);
-                } finally {
-                    setIsLoading(false);
-                }
-            })();
-        }, [])
+            dispatch(findAllWallets(null));
+        }, [dispatch])
     );
 
-    const navigateToEditWalletHandler = function (wallet: GetWalletResponse) {
-        navigation.navigate("EditWalletScreen", {
-            name: wallet.name,
-            balance: wallet.balance,
-        });
-    };
-
-    const navigateToAddWalletScreenHandler = function() {
+    const navigateToAddWalletScreenHandler = function () {
         navigation.navigate("AddWallet");
-    }
+    };
 
     return (
         <>
@@ -50,21 +37,7 @@ function AllWalletsScreen() {
 
             {!isLoading && wallets.length === 0 && <Text>No wallet found</Text>}
 
-            {!isLoading &&
-                wallets.length > 0 &&
-                wallets.map((wallet) => (
-                    <Card key={wallet.id}>
-                        <Card.Content style={styles.walletCardContainer}>
-                            <View>
-                                <Text variant="titleLarge">{wallet.name}</Text>
-                                <Text variant="bodyMedium">{wallet.balance}</Text>
-                            </View>
-                            <TouchableOpacity onPress={() => navigateToEditWalletHandler(wallet)}>
-                                <Icon source="pencil-circle-outline" size={30.52} />
-                            </TouchableOpacity>
-                        </Card.Content>
-                    </Card>
-                ))}
+            {!isLoading && wallets.length > 0 && <WalletList wallets={wallets} />}
 
             <FAB
                 icon="plus"
@@ -84,11 +57,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-    },
-    walletCardContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
     },
 });
 

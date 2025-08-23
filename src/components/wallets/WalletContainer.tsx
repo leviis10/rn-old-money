@@ -1,30 +1,21 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useCallback, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ActivityIndicator, Divider, Icon, Surface, Text } from "react-native-paper";
-import GetWalletResponse from "../../models/wallets/response/GetWalletResponse";
-import WalletService from "../../services/WalletService";
+import { useCallback } from "react";
+import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, Divider, Icon, Surface, Text, TouchableRipple } from "react-native-paper";
+import useAppDispatch from "../../hooks/useAppDispatch";
+import useAppSelector from "../../hooks/useAppSelector";
+import { findAllWallets } from "../../store/slices/walletsReducer";
 import Spacer from "../utils/Spacer";
 
 function WalletContainer() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [wallets, setWallets] = useState<GetWalletResponse[]>([]);
+    const { isLoading, wallets } = useAppSelector((state) => state.wallets);
+    const dispatch = useAppDispatch();
     const navigation = useNavigation();
 
     useFocusEffect(
         useCallback(() => {
-            (async () => {
-                try {
-                    const response = await WalletService.findAll();
-                    setWallets(response.data);
-                } catch (err) {
-                    // TODO: handle error
-                    console.error(err);
-                } finally {
-                    setIsLoading(false);
-                }
-            })();
-        }, [])
+            dispatch(findAllWallets({ maxFetch: 2 }));
+        }, [dispatch])
     );
 
     const navigateToAddWalletScreenHandler = function () {
@@ -40,9 +31,9 @@ function WalletContainer() {
             <View style={styles.title}>
                 <Text variant="titleMedium">My Wallet</Text>
                 {!isLoading && wallets.length > 0 && (
-                    <TouchableOpacity onPress={navigateToSeeAllWalletsHandler}>
+                    <TouchableRipple onPress={navigateToSeeAllWalletsHandler}>
                         <Text variant="labelSmall">See All</Text>
-                    </TouchableOpacity>
+                    </TouchableRipple>
                 )}
             </View>
             <Spacer height={10} />
@@ -52,16 +43,18 @@ function WalletContainer() {
                     <ActivityIndicator animating />
                 </View>
             )}
-            {!isLoading && wallets.length > 0 && (
-                <View>
-                    <Text>wallet1</Text>
-                </View>
-            )}
+            {!isLoading &&
+                wallets.length > 0 &&
+                wallets.map((wallet) => (
+                    <View key={wallet.id}>
+                        <Text>{wallet.name}</Text>
+                    </View>
+                ))}
             {!isLoading && wallets.length === 0 && (
                 <View style={styles.center}>
-                    <TouchableOpacity onPress={navigateToAddWalletScreenHandler}>
+                    <TouchableRipple onPress={navigateToAddWalletScreenHandler}>
                         <Icon source="plus-circle-outline" size={38.15} />
-                    </TouchableOpacity>
+                    </TouchableRipple>
                     <Spacer height={6.4} />
                     <Text>Start Creating a new one!</Text>
                 </View>

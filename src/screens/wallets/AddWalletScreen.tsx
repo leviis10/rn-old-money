@@ -4,8 +4,11 @@ import Spacer from "../../components/utils/Spacer";
 import WalletService from "../../services/WalletService";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import useProtectedScreen from "../../hooks/useProtectedScreen";
 
 function AddWalletScreen() {
+    useProtectedScreen();
+
     const [nameInput, setNameInput] = useState("");
     const [descriptionInput, setDescriptionInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +25,7 @@ function AddWalletScreen() {
             setIsLoading(true);
             await WalletService.create({
                 name: nameInput,
-                description: descriptionInput
+                description: descriptionInput,
             });
             navigation.goBack();
         } catch (err) {
@@ -37,9 +40,19 @@ function AddWalletScreen() {
         <Container>
             <TextInput mode="outlined" label="Name" onChangeText={(text) => setNameInput(text)} />
             <Spacer height={10} />
-            <TextInput mode="outlined" label="Description" multiline onChangeText={(text) => setDescriptionInput(text)} />
+            <TextInput
+                mode="outlined"
+                label="Description"
+                multiline
+                onChangeText={(text) => setDescriptionInput(text)}
+            />
             <Spacer height={10} />
-            <Button onPress={createWalletHandler} mode="contained" loading={isLoading} disabled={isLoading || !isValidInput}>
+            <Button
+                onPress={createWalletHandler}
+                mode="contained"
+                loading={isLoading}
+                disabled={isLoading || !isValidInput}
+            >
                 Add new wallet
             </Button>
         </Container>
