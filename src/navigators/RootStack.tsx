@@ -2,21 +2,21 @@ import { createStaticNavigation, StaticParamList } from "@react-navigation/nativ
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
-import HomeScreen from "../screens/home/HomeScreen";
 import AddWalletScreen from "../screens/wallets/AddWalletScreen";
 import AllWalletsScreen from "../screens/wallets/AllWalletsScreen";
 import EditWalletScreen from "../screens/wallets/EditWalletScreen";
 import store from "../store";
+import HomeBottomTab from "./HomeBottomTab";
 
 const RootStack = createNativeStackNavigator({
-    initialRouteName: store.getState().auth.accessToken === null ? "Login" : "Home",
+    initialRouteName: store.getState().auth.accessToken === null ? "Login" : "Dashboard",
     screenOptions: {
         headerShown: false,
     },
     screens: {
         Login: LoginScreen,
         Register: RegisterScreen,
-        Home: HomeScreen,
+        Dashboard: HomeBottomTab,
         AddWallet: {
             screen: AddWalletScreen,
             options: {

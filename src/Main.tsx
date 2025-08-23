@@ -3,6 +3,9 @@ import { PaperProvider } from "react-native-paper";
 import { Provider } from "react-redux";
 import App from "./App";
 import store from "./store";
+import { setHttpClientStore } from "./utils/httpClient";
+
+setHttpClientStore(store);
 
 export default function Main() {
     return (

@@ -3,10 +3,15 @@ import * as SecureStore from "expo-secure-store";
 import ApplicationConstants from "../constants/ApplicationConstants";
 import SecureStoreConstants from "../constants/SecureStoreConstants";
 import ErrorResponse, { ErrorCode } from "../models/global/response/ErrorResponse";
-// import AuthService from "../services/AuthService";
-import store from "../store";
+import type { StoreType } from "../store";
 import { setToken, unsetToken } from "../store/slices/authReducer";
 import handleHttpClientError from "./handleHttpClientError";
+
+let store: StoreType;
+
+export function setHttpClientStore(appStore: StoreType) {
+    store = appStore;
+}
 
 const httpClient = axios.create({
     baseURL: ApplicationConstants.API_BASE_URL,
