@@ -2,9 +2,11 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { ActivityIndicator, Divider, Icon, Surface, Text, TouchableRipple } from "react-native-paper";
+import Currency from "../../enums/Currency";
 import useAppDispatch from "../../hooks/useAppDispatch";
 import useAppSelector from "../../hooks/useAppSelector";
 import { findAllWallets } from "../../store/slices/walletsReducer";
+import { formatMoney } from "../../utils/currencyUtils";
 import Spacer from "../utils/Spacer";
 
 function WalletContainer() {
@@ -24,6 +26,13 @@ function WalletContainer() {
 
     const navigateToSeeAllWalletsHandler = function () {
         navigation.navigate("AllWalletsScreen");
+    };
+
+    const navigateToTransactionScreenHandler = function (wallet: string) {
+        navigation.navigate("Dashboard", {
+            screen: "Transaction",
+            params: { wallet },
+        });
     };
 
     return (
@@ -46,9 +55,12 @@ function WalletContainer() {
             {!isLoading &&
                 wallets.length > 0 &&
                 wallets.map((wallet) => (
-                    <View key={wallet.id}>
-                        <Text>{wallet.name}</Text>
-                    </View>
+                    <TouchableRipple key={wallet.id} onPress={() => navigateToTransactionScreenHandler(wallet.name)}>
+                        <View style={styles.walletItemContainer}>
+                            <Text>{wallet.name}</Text>
+                            <Text>{formatMoney(Currency.IDR, wallet.balance)}</Text>
+                        </View>
+                    </TouchableRipple>
                 ))}
             {!isLoading && wallets.length === 0 && (
                 <View style={styles.center}>
@@ -65,20 +77,31 @@ function WalletContainer() {
 
 const styles = StyleSheet.create({
     container: {
-        height: 181.93,
         width: "100%",
         borderRadius: 10,
-        padding: 12.5,
+        paddingTop: 12.5,
+        paddingBottom: 12.5,
     },
     title: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        paddingLeft: 12.5,
+        paddingRight: 12.5,
     },
     center: {
         alignItems: "center",
         justifyContent: "center",
         flex: 1,
+    },
+    walletItemContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingTop: 19.53,
+        paddingBottom: 19.53,
+        paddingLeft: 12.5,
+        paddingRight: 12.5,
     },
 });
 

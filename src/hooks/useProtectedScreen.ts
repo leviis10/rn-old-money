@@ -1,19 +1,21 @@
-import { useEffect } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback } from "react";
 import useAppSelector from "./useAppSelector";
-import { useNavigation } from "@react-navigation/native";
 
 function useProtectedScreen() {
     const { accessToken: authStateAccessToken } = useAppSelector(({ auth }) => auth);
     const navigation = useNavigation();
 
-    useEffect(() => {
-        if (authStateAccessToken === null) {
-            navigation.reset({
-                index: 0,
-                routes: [{ name: "Login" }],
-            });
-        }
-    }, [navigation, authStateAccessToken]);
+    useFocusEffect(
+        useCallback(() => {
+            if (authStateAccessToken === null) {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Login" }],
+                });
+            }
+        }, [navigation, authStateAccessToken])
+    );
 }
 
 export default useProtectedScreen;

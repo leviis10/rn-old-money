@@ -38,14 +38,9 @@ function AddWalletScreen() {
 
     return (
         <Container>
-            <TextInput mode="outlined" label="Name" onChangeText={(text) => setNameInput(text)} />
+            <TextInput mode="outlined" label="Name" onChangeText={setNameInput} />
             <Spacer height={10} />
-            <TextInput
-                mode="outlined"
-                label="Description"
-                multiline
-                onChangeText={(text) => setDescriptionInput(text)}
-            />
+            <TextInput mode="outlined" label="Description" multiline onChangeText={setDescriptionInput} />
             <Spacer height={10} />
             <Button
                 onPress={createWalletHandler}

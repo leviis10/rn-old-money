@@ -1,9 +1,10 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BottomNavigation } from "react-native-paper";
-import HomeScreen from "../screens/home/HomeScreen";
-import AllTransactionsScreen from "../screens/transactions/AllTransactionsScreen";
 import { CommonActions } from "@react-navigation/native";
+import { BottomNavigation, Icon } from "react-native-paper";
+import AllBudgetsScreen from "../screens/budgets/AllBudgetsScreen";
+import HomeScreen from "../screens/home/HomeScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import AllTransactionsScreen from "../screens/transactions/AllTransactionsScreen";
 
 const HomeBottomTab = createBottomTabNavigator({
     screenOptions: {
@@ -49,17 +50,25 @@ const HomeBottomTab = createBottomTabNavigator({
         Home: {
             screen: HomeScreen,
             options: {
-                tabBarIcon: ({ color, focused }) => (
-                    <MaterialCommunityIcons name={focused ? "home" : "home-outline"} color={color} size={26} />
-                ),
+                tabBarIcon: ({ focused }) => <Icon source={focused ? "home" : "home-outline"} size={26} />,
             },
         },
         Transaction: {
             screen: AllTransactionsScreen,
             options: {
-                tabBarIcon: ({ color, focused }) => (
-                    <MaterialCommunityIcons name={focused ? "wallet" : "wallet-outline"} color={color} size={26} />
-                ),
+                tabBarIcon: ({ focused }) => <Icon source={focused ? "wallet" : "wallet-outline"} size={26} />,
+            },
+        },
+        Budget: {
+            screen: AllBudgetsScreen,
+            options: {
+                tabBarIcon: ({ focused }) => <Icon source={focused ? "piggy-bank" : "piggy-bank-outline"} size={26} />,
+            },
+        },
+        Profile: {
+            screen: ProfileScreen,
+            options: {
+                tabBarIcon: ({ focused }) => <Icon source={focused ? "account" : "account-outline"} size={26} />,
             },
         },
     },

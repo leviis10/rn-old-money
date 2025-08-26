@@ -7,6 +7,9 @@ import AllWalletsScreen from "../screens/wallets/AllWalletsScreen";
 import EditWalletScreen from "../screens/wallets/EditWalletScreen";
 import store from "../store";
 import HomeBottomTab from "./HomeBottomTab";
+import AllCategoriesScreen from "../screens/categories/AllCategoriesScreen";
+import AddCategoryScreen from "../screens/categories/AddCategoryScreen";
+import CategoryDetailScreen from "../screens/categories/CategoryDetailScreen";
 
 const RootStack = createNativeStackNavigator({
     initialRouteName: store.getState().auth.accessToken === null ? "Login" : "Dashboard",
@@ -36,6 +39,27 @@ const RootStack = createNativeStackNavigator({
             options: {
                 headerShown: true,
                 title: "Edit Wallet",
+            },
+        },
+        AllCategoriesScreen: {
+            screen: AllCategoriesScreen,
+            options: {
+                headerShown: true,
+                title: "All Categories",
+            },
+        },
+        AddCategoryScreen: {
+            screen: AddCategoryScreen,
+            options: {
+                headerShown: true,
+                title: "Add Category",
+            },
+        },
+        CategoryDetailScreen: {
+            screen: CategoryDetailScreen,
+            options: {
+                headerShown: true,
+                title: "Category Detail",
             },
         },
     },

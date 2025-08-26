@@ -6,6 +6,8 @@ import useAppDispatch from "../../hooks/useAppDispatch";
 import GetWalletResponse from "../../models/wallets/response/GetWalletResponse";
 import WalletService from "../../services/WalletService";
 import { findAllWallets } from "../../store/slices/walletsReducer";
+import { formatMoney } from "../../utils/currencyUtils";
+import Currency from "../../enums/Currency";
 
 interface WalletItemProps {
     wallet: GetWalletResponse;
@@ -64,7 +66,7 @@ function WalletItem({ wallet }: WalletItemProps) {
                 <Card.Content style={styles.walletCardContainer}>
                     <View>
                         <Text variant="titleLarge">{wallet.name}</Text>
-                        <Text variant="bodyMedium">{wallet.balance}</Text>
+                        <Text variant="bodyLarge">{formatMoney(Currency.IDR, wallet.balance)}</Text>
                     </View>
                     <Menu
                         visible={isMenuVisible}
@@ -82,7 +84,6 @@ function WalletItem({ wallet }: WalletItemProps) {
             </Card>
             <Portal>
                 <Dialog visible={isDialogVisible} onDismiss={hideDeleteDialogHandler} dismissable={!isDeleting}>
-                    {/* <Dialog.Title>Alert</Dialog.Title> */}
                     <Dialog.Content>
                         <Text variant="bodyMedium">
                             Are you sure want to delete <Text style={styles.bold}>{wallet.name}</Text>?
