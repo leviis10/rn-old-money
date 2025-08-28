@@ -2,14 +2,15 @@ import { createStaticNavigation, StaticParamList } from "@react-navigation/nativ
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
+import CreateBudgetScreen from "../screens/budgets/CreateBudgetScreen";
+import AddCategoryScreen from "../screens/categories/AddCategoryScreen";
+import AllCategoriesScreen from "../screens/categories/AllCategoriesScreen";
+import CategoryDetailScreen from "../screens/categories/CategoryDetailScreen";
 import AddWalletScreen from "../screens/wallets/AddWalletScreen";
 import AllWalletsScreen from "../screens/wallets/AllWalletsScreen";
 import EditWalletScreen from "../screens/wallets/EditWalletScreen";
 import store from "../store";
 import HomeBottomTab from "./HomeBottomTab";
-import AllCategoriesScreen from "../screens/categories/AllCategoriesScreen";
-import AddCategoryScreen from "../screens/categories/AddCategoryScreen";
-import CategoryDetailScreen from "../screens/categories/CategoryDetailScreen";
 
 const RootStack = createNativeStackNavigator({
     initialRouteName: store.getState().auth.accessToken === null ? "Login" : "Dashboard",
@@ -60,6 +61,13 @@ const RootStack = createNativeStackNavigator({
             options: {
                 headerShown: true,
                 title: "Category Detail",
+            },
+        },
+        CreateBudgetScreen: {
+            screen: CreateBudgetScreen,
+            options: {
+                headerShown: true,
+                title: "Add Budget",
             },
         },
     },

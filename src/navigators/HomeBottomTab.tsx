@@ -63,6 +63,8 @@ const HomeBottomTab = createBottomTabNavigator({
             screen: AllBudgetsScreen,
             options: {
                 tabBarIcon: ({ focused }) => <Icon source={focused ? "piggy-bank" : "piggy-bank-outline"} size={26} />,
+                headerShown: true,
+                headerTitle: "All Budget",
             },
         },
         Profile: {
