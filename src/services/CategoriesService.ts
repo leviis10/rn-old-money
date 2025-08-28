@@ -41,6 +41,16 @@ class CategoriesService {
             return data;
         });
     }
+
+    static async deleteById(id: number) {
+        return await handleHttpClientError(async () => {
+            const { data } = await httpClient({
+                url: `${this.#baseUrl}/${id}`,
+                method: "DELETE",
+            });
+            return data;
+        });
+    }
 }
 
 export default CategoriesService;

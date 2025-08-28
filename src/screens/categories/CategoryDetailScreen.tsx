@@ -6,6 +6,7 @@ import EditCategoryForm from "../../components/categories/EditCategoryForm";
 import Container from "../../components/utils/Container";
 import useProtectedScreen from "../../hooks/useProtectedScreen";
 import type GetCategoryResponse from "../../models/categories/response/GetCategoryResponse";
+import CategoriesService from "../../services/CategoriesService";
 
 export type CategoryDetailScreenParams = {
     category: GetCategoryResponse;
@@ -15,6 +16,7 @@ function CategoryDetailScreen({ route }: StaticScreenProps<CategoryDetailScreenP
     useProtectedScreen();
 
     const [visible, setVisible] = useState(false);
+    const [isDeletingCategory, setIsDeletingCategory] = useState(false);
     const navigation = useNavigation();
 
     const {
@@ -45,10 +47,15 @@ function CategoryDetailScreen({ route }: StaticScreenProps<CategoryDetailScreenP
 
     const deleteCategoryHandler = async function () {
         try {
+            setIsDeletingCategory(true);
+            await CategoriesService.deleteById(category.id);
+            hideDialog();
+            navigation.goBack();
         } catch (err) {
             // TODO: handle error
             console.error(err);
         } finally {
+            setIsDeletingCategory(false);
         }
     };
 
@@ -58,7 +65,7 @@ function CategoryDetailScreen({ route }: StaticScreenProps<CategoryDetailScreenP
                 <EditCategoryForm category={category} />
             </Container>
             <Portal>
-                <Dialog visible={visible} onDismiss={hideDialog}>
+                <Dialog visible={visible} onDismiss={hideDialog} dismissable={!isDeletingCategory}>
                     <Dialog.Title>Delete Category</Dialog.Title>
                     <Dialog.Content>
                         <Text variant="bodyMedium">
@@ -66,8 +73,12 @@ function CategoryDetailScreen({ route }: StaticScreenProps<CategoryDetailScreenP
                         </Text>
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={hideDialog}>Cancel</Button>
-                        <Button onPress={deleteCategoryHandler}>Delete</Button>
+                        <Button onPress={hideDialog} disabled={isDeletingCategory}>
+                            Cancel
+                        </Button>
+                        <Button onPress={deleteCategoryHandler} disabled={isDeletingCategory}>
+                            Delete
+                        </Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
